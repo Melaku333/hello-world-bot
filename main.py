@@ -3,8 +3,9 @@ import threading
 import http.server
 import socketserver
 import asyncio
+from aiogram import Bot, Dispatcher
+from bot import router
 
-from bot import dp, bot
 
 def run_health_server():
     port = int(os.getenv("PORT", "8000"))
@@ -13,8 +14,13 @@ def run_health_server():
         print(f"Health server listening on 0.0.0.0:{port}")
         httpd.serve_forever()
 
+BOT_TOKEN = os.getenv("BOT_TOKEN")
+
 async def main():
     # Start polling the bot
+    bot = Bot(token=BOT_TOKEN)
+    dp = Dispatcher()
+    dp.include_router(router)
     await dp.start_polling(bot)
 
 if __name__ == "__main__":
