@@ -1,15 +1,14 @@
-from aiogram import Bot, Dispatcher, types
-import os
-import asyncio
+from aiogram import Router
+from aiogram.types import Message
+from datetime import datetime
 
-BOT_TOKEN = os.getenv("BOT_TOKEN")
-if not BOT_TOKEN:
-    raise RuntimeError("BOT_TOKEN environment variable not set")
+router = Router()
 
-bot = Bot(token=BOT_TOKEN)
-dp = Dispatcher()
+@router.message(lambda m: m.text and m.text.lower() == "hi")
+async def hello_handler(message: Message):
+    await message.answer("Hello World!")
 
-@dp.message()
-async def say_hello(message: types.Message):
-    if message.text and message.text.lower() == "hi":
-        await message.reply("Hello World!")
+@router.message(lambda m: m.text and m.text.lower() == "time")
+async def time_handler(message: Message):
+    now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    await message.answer(f"⏰ Current time: {now}")
